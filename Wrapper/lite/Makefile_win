@@ -1,0 +1,8 @@
+all: build execute
+
+build:
+	cl wrapper_client.cpp /Fewrapper_client.exe \
+	/I "..\include" /link libwrapper.lib /LIBPATH:"..\lib"	
+
+execute:
+	set PATH=%PATH%;..\ && wrapper_client.exe

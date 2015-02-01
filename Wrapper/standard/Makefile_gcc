@@ -1,0 +1,8 @@
+all: build execute
+
+build:
+	gcc -DSTANDARD_EDITION -L../ -lwrapper -lrpa -lutils -lmath -lnozzle -lconfig++ \
+	wrapper_client.cpp -o wrapper_client.exe 
+
+execute:
+	LD_LIBRARY_PATH=../:$LD_LIBRARY_PATH ./wrapper_client.exe
