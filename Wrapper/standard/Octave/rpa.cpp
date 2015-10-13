@@ -43,6 +43,10 @@
 
 /**
  * Initialize RPA 
+ * Parameters:
+ * respath - path to resource directory with database files; optional; default value is "./resources"
+ * logpath - path to log directory; optional; default value is "./"
+ * consoleOutput - if true, duplicate the logging in console; optional; default value is true
  **/
 DEFUN_DLD (rpaInit, args, nargout, "Initialize RPA") {
   int nargin = args.length();
@@ -80,6 +84,9 @@ DEFUN_DLD (rpaFinalize, args, nargout, "Finalize RPA") {
 
 /**
  * Open configuration file 
+ * Parameters:
+ * cfgpath - path to configuration file
+ * Returns pointers to configuration object; don't modify it within Octave program 
  **/
 DEFUN_DLD (rpaConfigOpen, args, nargout, "Open configuration file") {
   octave_value retval;
@@ -93,6 +100,8 @@ DEFUN_DLD (rpaConfigOpen, args, nargout, "Open configuration file") {
 
 /**
  * Close configuration file 
+ * Parameters:
+ * c - pointers to configuration object
  **/
 DEFUN_DLD (rpaConfigClose, args, nargout, "Close configuration file") {
   if (args.length()>0) {
@@ -109,8 +118,13 @@ DEFUN_DLD (rpaConfigClose, args, nargout, "Close configuration file") {
  * 
  * This examples does not provide any further functions for manipulating the configuration file.
  * You may add new functions using this one as an example.
+ * 
+ * Parameters:
+ * c - pointers to configuration object; required
+ * units - pressure units ("Pa"|"MPa"|"atm"|"bar"|"psi"|"psia"|"at"|"kg/cm2"); optionsl; default value is "MPa"
+ * Returns the list (pressure, units)
  **/
-DEFUN_DLD (rpaConfigGetPc, args, nargout, "Close configuration file") {
+DEFUN_DLD (rpaConfigGetPc, args, nargout, "Get combustion chamber pressure") {
   int nargin = args.length();
   
   octave_value_list retval;
@@ -135,8 +149,13 @@ DEFUN_DLD (rpaConfigGetPc, args, nargout, "Close configuration file") {
  * 
  * This examples does not provide any further functions for manipulating the configuration file.
  * You may add new functions using this one as an example.
+ * 
+ * Parameters:
+ * c - pointers to configuration object; required
+ * p - pressure
+ * units - pressure units ("Pa"|"MPa"|"atm"|"bar"|"psi"|"psia"|"at"|"kg/cm2"); optionsl; default value is "MPa"
  **/
-DEFUN_DLD (rpaConfigSetPc, args, nargout, "Close configuration file") {
+DEFUN_DLD (rpaConfigSetPc, args, nargout, "Set combustion chamber pressure") {
   int nargin = args.length();
   
   if (nargin>0) {
@@ -159,6 +178,9 @@ DEFUN_DLD (rpaConfigSetPc, args, nargout, "Close configuration file") {
 
 /**
  * Create and run performance object 
+ * Parameters:
+ * c - pointers to configuration object; required
+ * Returns pointers to performance object; don't modify it within Octave program 
  **/
 DEFUN_DLD (rpaPerformance, args, nargout, "Create and run performance object") {
   octave_value retval;
@@ -175,6 +197,8 @@ DEFUN_DLD (rpaPerformance, args, nargout, "Create and run performance object") {
 
 /**
  * Delete performance object
+ * Parameters:
+ * p - pointer to performance object
  **/
 DEFUN_DLD (rpaPerformanceDelete, args, nargout, "Delete performance object") {
   if (args.length()>0) {
@@ -195,6 +219,7 @@ DEFUN_DLD (rpaPerformanceDelete, args, nargout, "Delete performance object") {
  * pa_units - pressure units; optionsl; default value is "atm"
  * throttleValue - throttle value (throttleValue=1.0 at nominal thrust); optional; default value is 1 
  * phi - correction factor; if phi==0, uses correction factors defined in configuration file, or estimated factor, if not defined in configuration file; optionsl; default value is 0
+ * Returns the list (Isp, Isp_units, üa. pa_units, throttleValue, phi)
  **/
 DEFUN_DLD (rpaPerformanceGetIsp, args, nargout, "Get delivered specific impulse") {
   int nargin = args.length();
@@ -255,6 +280,7 @@ DEFUN_DLD (rpaPerformanceGetIsp, args, nargout, "Get delivered specific impulse"
  * pa - ambient pressure; optional; default value is 0 (vacuum)
  * pa_units - pressure units; optionsl; default value is "atm"
  * throttleValue - throttle value (throttleValue=1.0 at nominal thrust); optional; default value is 1 
+ * Returns the list (Isp, Isp_units, üa. pa_units, throttleValue, phi)
  **/
 DEFUN_DLD (rpaPerformanceGetIdealIsp, args, nargout, "Get delivered specific impulse") {
   int nargin = args.length();
@@ -295,6 +321,7 @@ DEFUN_DLD (rpaPerformanceGetIdealIsp, args, nargout, "Get delivered specific imp
     retval(2) = pa;
     retval(3) = p_units;
     retval(4) = throttleValue;
+    retval(5) = 1;
   }
   
   return retval;
